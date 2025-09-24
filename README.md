@@ -1,3 +1,6 @@
+# FightDetectionSystemV2
+
+
 This project integrates **computer vision**, **speech recognition**, and **real-time notifications** to detect aggressive human interactions and send alerts instantly.  
 It was **first presented at the Shilin Commercial High School Data Processing Department Project Competition, where it won First Place** 🏆.
 
