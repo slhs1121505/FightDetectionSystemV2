@@ -63,5 +63,5 @@ flowchart TD
 - [Pose Estimation – Ultralytics YOLO Docs](https://docs.ultralytics.com/tasks/pose/)  
 - [How to receive webhooks in Python with Flask or Django – LogRocket Blog](https://blog.logrocket.com/receive-webhooks-python-flask-or-django/)  
 - [How to Set Up Python Webhooks: 3 Simple Steps – Hevo Data](https://hevodata.com/learn/python-webhook/)  
-- [STEAM 教學網：OpenCV 教學索引](https://steam.oxxostudio.tw/category/python/ai/opencv-index.html)  
+- [STEAM 教育學習網：OpenCV 教學索引](https://steam.oxxostudio.tw/category/python/ai/opencv-index.html)  
 - [You Only Look Once: Unified, Real-Time Object Detection (CVPR 2016)](https://www.cvfoundation.org/openaccess/content_cvpr_2016/papers/Redmon_You_Only_Look_CVPR_2016_paper.pdf)  
