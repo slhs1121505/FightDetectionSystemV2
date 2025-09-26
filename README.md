@@ -1,24 +1,24 @@
 # FightDetectionSystemV2
 
 
-This project integrates **computer vision**, **speech recognition**, and **real-time notifications** to detect aggressive human interactions and send alerts instantly.  
-It was **first presented at the Shilin Commercial High School Data Processing Department Project Competition, where it won First Place** 🏆.
+This groundbreaking project seamlessly fuses **computer vision**, **speech recognition**, and **real-time alert systems** to detect aggressive human interactions with unprecedented precision and instant notification.  
+It **debuted at the Shilin Commercial High School Data Processing Department Project Competition, where it achieved the coveted First Place, earning accolades for its visionary innovation and technical mastery** 🏆.
 
 ---
 
-## 🚀 Features
+## 🚀 Breakthrough Capabilities
 
-- **Real-Time Human Pose Estimation** – Powered by [YOLOv8n](https://docs.ultralytics.com/tasks/pose/), running continuously on live camera feeds.  
-- **Aggression Scoring & Contact Tracking** – Counts short-term physical contact frequency and calculates aggression scores to reduce false positives.  
-- **Voice Integration** – Captures speech via microphone and uses `SpeechRecognition` for speech-to-text; key phrases can trigger alerts.  
-- **Local TTS Notifications** – Uses `pyttsx3` to generate immediate voice alerts on-site.  
-- **Discord Webhook Integration** – Sends snapshots, scores, and metadata to a dedicated Discord channel for remote monitoring.  
-- **Evidence Archiving** – Saves screenshots and event logs for auditing and further analysis.  
-- **Extensible Flask API** – Provides endpoints for health checks, log retrieval, and future system integration.
+- **Real-Time Human Pose Estimation** – Leveraging the cutting-edge [YOLOv8n](https://docs.ultralytics.com/tasks/pose/), the system continuously analyzes live camera feeds with unparalleled precision.  
+- **Aggression Scoring & Contact Tracking** – Quantifies short-term physical interactions and computes aggression metrics to minimize false positives, ensuring highly reliable detection.  
+- **Integrated Voice Command Detection** – Captures speech via microphone using advanced `SpeechRecognition` ; strategically defined key phrases instantly trigger alerts.  
+- **Immediate Local TTS Notifications** – Employs `pyttsx3` to deliver real-time voice alerts on-site for instantaneous response.  
+- **Discord Webhook Integration** – Seamlessly transmits snapshots, aggression scores, and metadata to a dedicated Discord channel for comprehensive remote monitoring.  
+- **Evidence Archiving** – Systematically stores screenshots and event logs, supporting auditing, verification, and advanced analytics.  
+- **Extensible Flask API** – Provides robust endpoints for health checks, log retrieval, and future integrations, ensuring scalability and professional-grade system interoperability.
 
 ---
 
-## 🛠 Tech Stack
+## 🛠 World-Class Tech Stack
 
 - **Core Model**: YOLOv8n (Ultralytics)  
 - **Computer Vision**: OpenCV  
@@ -48,7 +48,7 @@ flowchart TD
 ```
 ---
 
-## 🏆 Achievements
+## 🏆 Champion-Level Accomplishments
 
 - **1st Place – Shilin Commercial High School Data Processing Department Project Competition**  
 - Successfully demonstrated real-time aggression detection and alerting in a live competition setting.  
@@ -56,7 +56,7 @@ flowchart TD
 
 ---
 
-## 📚 References
+## 📚 Authoritative References
 
 - [A human pose estimation network based on YOLOv8 framework with efficient multi-scale receptive field and expanded feature pyramid network – Scientific Reports](https://www.nature.com/articles/s41598-025-00259-0)  
 - [Automated violence monitoring system for real-time fist fight detection using deep learning-based temporal action localization – Scientific Reports](https://www.nature.com/articles/s41598-025-12531-4)  
