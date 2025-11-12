@@ -150,7 +150,6 @@ class FightDetectionSystem:
                                 print(f"Heard: {txt}")
                                 keywords = ["救命", "help", "停", "不要", "救我", "打架"]
                                 if any(kw in txt.lower() for kw in keywords):
-                                    # Get current frame for voice alert
                                     with self.frame_lock:
                                         current_frame = self.latest_frame.copy() if self.latest_frame is not None else None
                                     self._on_emergency("voice", txt, current_frame)
