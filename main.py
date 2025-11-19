@@ -9,7 +9,7 @@ import speech_recognition as sr
 
 
 mdl_pth = os.getenv("YOLO_MODEL_PATH", "yolov8n-pose.pt")
-dsc_wbhk = os.getenv("DISCORD_WEBHOOK_URL", "[DISCORD_WEBHOOK_URL]")
+dsc_wbhk = os.getenv("DISCORD_WEBHOOK_URL", "URL")
 en_spc = os.getenv("ENABLE_SPEECH_RECOGNITION", "1") == "1"
 flsk_srv = os.getenv("FLASK_SERVER", "0") == "1"
 flsk_prt = int(os.getenv("FLASK_PORT", "5000"))
@@ -22,6 +22,7 @@ agr_thr = float(os.getenv("AGGRESSION_THRESHOLD", "3.5"))
 dsc_mnt = os.getenv("DISCORD_MENTION", "@everyone").strip()
 
 app = Flask(__name__, static_folder=upld_dir)
+
 
 @app.route("/health", methods=["GET"])
 def health():
@@ -42,8 +43,8 @@ def send_discord_embed(title, desc, color, img_bytes=None, src_type="vision"):
         "timestamp": datetime.utcnow().isoformat(),
         "footer": {"text": f"偵測來源: {src_type.upper()}"},
         "fields": [
-            {"name": "偵測類型", "value": "🎤 語音" if src_type == "voice" else "👁️ 視覺", "inline": True},
-            {"name": "嚴重程度", "value": "🔴 緊急" if "緊急" in title else "⚠️ 警告", "inline": True}
+            {"name": "偵測類型", "value": "語音" if src_type == "voice" else "鏡頭偵測", "inline": True},
+            {"name": "嚴重程度", "value": "緊急" if "緊急" in title else "警告", "inline": True}
         ]
     }
     
@@ -108,18 +109,21 @@ class FightDetectionSystem:
         self.next_person_id = 0
         self.contact_timeout = 1.0 
         self.min_contacts_for_fight = 2 
-        
-        # Store latest frame for voice detection screenshots
+ 
         self.latest_frame = None
         self.frame_lock = threading.Lock()
         
+        # 保留欄位，但實際播報時會每次重新建立引擎，避免某些平台只播放一次的問題
         self.tts_engine = None
         if pyttsx3:
             try:
-                self.tts_engine = pyttsx3.init()
-                self.tts_engine.setProperty('rate', 180)
-                self.tts_engine.setProperty('volume', 1.0)
-            except Exception:
+                # 這裡只測試是否可以初始化，不長期持有這個引擎
+                test_engine = pyttsx3.init()
+                test_engine.setProperty('rate', 180)
+                test_engine.setProperty('volume', 1.0)
+                print("TTS 初始化成功")
+            except Exception as e:
+                print(f"TTS 初始化失敗: {e}")
                 self.tts_engine = None
         
         self.voice_active = False
@@ -439,11 +443,20 @@ class FightDetectionSystem:
             cv2.rectangle(frame, (w-180, 10), (w-10, 80), (0,0,255), -1)
             cv2.putText(frame, "ALERT!", (w-140, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255,255,255), 2)
         return frame
+    
+    def _play_tts(self, msg):
+        try:
+            engine = pyttsx3.init()
+            engine.setProperty('rate', 180)
+            engine.setProperty('volume', 1.0)
+            engine.say(msg)
+            engine.runAndWait()
+            engine.stop()
+        except Exception as e:
+            print(f"TTS 播放錯誤: {e}")
 
     def _on_emergency(self, source_type="vision", text=None, frame=None):
         now = time.time()
-        if now - self.last_alert_time < 5:
-            return
         
         self.last_alert_time = now
         self.total_alerts += 1
@@ -451,18 +464,17 @@ class FightDetectionSystem:
         self.alert_start_time = now
         
         if source_type == "voice":
-            title = "🚨 緊急語音警報"
+            title = "緊急語音警報"
             desc = f"偵測到求救語音: **{text}**\n請立即提供協助!"
             color = 16711680
         else:
-            title = "⚠️ 偵測到打架行為"
+            title = "偵測到打架行為"
             desc = f"視覺系統偵測到重複性肢體衝突\n一秒內發生多次接觸，疑似打鬥行為"
             color = 16744192
         
         def send_task():
             img_bytes = None
             if frame is not None:
-                # Add alert overlay for voice detection
                 if source_type == "voice":
                     alert_frame = frame.copy()
                     _, enc = cv2.imencode(".jpg", alert_frame)
@@ -476,18 +488,18 @@ class FightDetectionSystem:
         
         threading.Thread(target=send_task, daemon=True).start()
         
-        if self.tts_engine:
+        if pyttsx3:
             try:
                 if source_type == "voice":
-                    self.tts_engine.say("偵測到緊急求救，已發送警報!")
+                    msg = "偵測到緊急求救，已發送警報!"
                 else:
-                    self.tts_engine.say("偵測到打架！安全警報已觸發!")
-                threading.Thread(target=self.tts_engine.runAndWait, daemon=True).start()
-            except Exception:
-                pass
+                    msg = "偵測到打架！安全警報已觸發!"
+                print(f"TTS 播放：{msg}")
+                threading.Thread(target=self._play_tts, args=(msg,), daemon=True).start()
+            except Exception as e:
+                print(f"TTS 播放錯誤: {e}")
 
     def process_frame_and_update(self, frame):
-        # Update latest frame for voice detection
         with self.frame_lock:
             self.latest_frame = frame.copy()
         
@@ -495,7 +507,6 @@ class FightDetectionSystem:
         
         now = time.time()
         if fight:
-            if not self.fight_detected or (now - self.alert_start_time > 10):
                 path, bytes_img = save_frame_locally(frame)
                 self._on_emergency(source_type="vision", frame=frame)
         else:
